@@ -1,0 +1,13 @@
+-- Load the data
+data = LOAD 'path/to/your/temperature_data.csv' USING PigStorage(',') AS (year:int, month:int, day:int, temperature:float);
+
+-- Group data by year
+grouped_data = GROUP data BY year;
+
+-- Calculate the maximum temperature for each year
+max_temp_per_year = FOREACH grouped_data GENERATE
+    group AS year,
+    MAX(data.temperature) AS max_temperature;
+
+-- Store the result
+STORE max_temp_per_year INTO 'path/to/output' USING PigStorage(',');
